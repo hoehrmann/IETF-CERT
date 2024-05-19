@@ -1,0 +1,14 @@
+nb ::= [^\n\[]
+
+summary ::= "Summary of page " [0-9]+ ":" nb [^\n]+ [\n]
+
+note ::= "Note to self: " nb [^\n]+ [\n]
+
+comment ::= "Comment: " nb [^n]+ [\n]
+
+command ::= page-cmd
+
+page-cmd ::= "$ page " [0-9]+ [\n]
+
+root ::= summary (note comment?) page-cmd
+
