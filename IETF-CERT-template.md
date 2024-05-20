@@ -57,9 +57,7 @@ Two newlines (an empty line) are required after a field.
 
 At the beginning of the terminal session, you have to retrieve the first page of the document to be reviewed. Then you have to provide the `Summary: ` field. Then you may add additional fields and issue commands. When ready to retrieve the next page, invoke the `$ page 2` command to retrieve the second page. You MUST repeat this process exhaustively until you have retrieved the last page.
 
-## Conclusion
-
-This is all you need to know about the terminal. The terminal will launch now. Await the next request for a document review.
+NOTE: Avoid making the same observations repeatedly. Focus on what each page adds as new information.
 
 # New document to review
 

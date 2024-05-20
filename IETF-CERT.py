@@ -5,7 +5,7 @@ import click
 from llama_cpp import Llama, LlamaGrammar, StoppingCriteriaList
 import rich
 from itertools import accumulate
-
+import copy
 
 def read_draft(draft: click.File):
     pages = draft.read().rstrip("\r\n\t\f ").split("\f")
@@ -60,16 +60,24 @@ def to_full(message):
 
 
 def to_medium(message):
-    return [e["content"] if e["type"] != "draft" else "> [...]\n\n" for e in message]
-
+    for m in message:
+        if m["type"] == 'draft':
+            c = copy.deepcopy(m)
+            c["content"] = "> [...]\n\n"
+            yield c
+        else:
+            yield m
 
 def to_minimal(message):
-    return [
-        e["content"] if e["type"] != "draft" else "> [...]\n\n"
-        for e in message
-        if e["type"] != "comment"
-    ]
-
+    for m in message:
+        if m["type"] == 'draft':
+            c = copy.deepcopy(m)
+            c["content"] = "> [...]\n\n"
+            yield c
+        if m["type"] == "comment":
+            pass
+        else:
+            yield m
 
 def flatten(xss):
     return [x for xs in xss for x in xs]
@@ -150,7 +158,7 @@ def complete_page(model: Llama, grammar, messages):
         messages,
         grammar=grammar,
         stream=True,
-        max_tokens=512,
+        max_tokens=256,
     ):
 
         # rich.print(token)
@@ -164,6 +172,9 @@ def complete_page(model: Llama, grammar, messages):
         # FIXME: Should expect a newline
         if re.search(r"\$ page \d+\D", generated):
             rich.print("Found page command", token)
+            break
+
+        if len(generated) > 1000:
             break
 
         print(text, end="")

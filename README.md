@@ -91,4 +91,22 @@ $ page 2
 > - **Future Context Awareness**: As the model progresses through the document, it might consider incorporating references to how subsequent sections relate to or build upon the information in previous pages. This would enhance the continuity and coherence of its feedback.
 > 
 > Overall, the model's first steps demonstrate a solid foundation in adhering to the review process and show promise in providing valuable insights once it has processed the entire document. Its systematic approach and planned investigation into related standards are commendable.
-> 
+
+## Ideas
+
+* What happens if we provide the model with its own notes and comments as things to look out for and then have it review the document again?
+* As above, but having it read the document backwards? Curious about this in general. I have found it easier to find flaws in drafts reading them back to front, and it seems LLM training would yield different results if models were trained, possibly in addition to their front-to-back training, if they had to predict how to arrive at the conclusion.
+* What happens if we let the model analyse its own review? Can it generate a critique that might help itself to perform better on a second pass?
+* A single page might not add enough information to make progress in a review, how about combining 2 or four pages (pretending the set is only a single page)? This might be especially interesting when doing a second pass over the document.
+* Have more advanced models critique reviews. Let the less advanced models take their feedback into account.
+* During the first hours of development, I added a `Question` Field (or command) for the model to ask questions of the authors or its Review Team peers. The result was a bit scary, so I removed it for now.
+* More commands! Initially I wanted to use some off-the-self semantic search engine to enable the model to search the current document or referenced documents to formulate questions for which the semantic search engine would then generate excerpts to be added to the prompt. I was not successful in finding good libraries for that. I tried some options but they seemed close to useless.
+* So in this sense, what if the model could fork and do this on its own: formulate a question like "Does RFC 1234 allow X" and then read RFC 1234 to that end, returning with an analysis added to the review process?
+* I am wondering why llama3-text makes liberal use of the `Note to self` field while llama3-instruct largely refuses it. Can the prompt be improved?
+* The original intent of the `Comment` field was that the model would fill it with an actual review comment that could be posted as an issue with the draft, but models tend to use it for free-form commentary (and that might be due to the grammar greating increasing the odds of the model being forced to fill the field). But be that as it may, the proper protocol should anyways be that we first accumulate possible comments and review notes and then let the model go over them again. For instance, it might discover it had an open question, that was then answered to its satisfaction later in the draft. And there may have been ones without satisfactory answer. So how can we make the model compose a summary review of actually relevant issues after having ingested the whole document or its own compression and analysis of it?
+* What about teamwork? Consider this case: implementations might encounter a specific scenario that is not covered by the specification. But the specification also does not call out this scenario and state that any implementation-defined handling of the scenario is conforming. Is that an oversight? Perhaps one agent can focus on this particular kind of problem (let's call it "completeness"), while a different agent might focus on complaining about features with privacy implications that are not spelled out in the document, and yet another might complain about sentences that are too long or too deploy nested.
+* What if we ask the model to combine the musings of the different agents and write a new system prompt based on that, and then have the model go through the document again?
+
+## Issues
+
+The llama-cpp GBNF grammar feature does not seem to work right, models often generate output that is not allowed. Might be a misunderstanding on my part.
